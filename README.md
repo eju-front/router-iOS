@@ -79,10 +79,10 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 </plist>
 ~~~
 ```
-* identifier :页面唯一标识符
-* description : 页面描述
-* resource :页面的全路径
-* type :页面类型
+identifier :页面唯一标识符
+description : 页面描述
+resource :页面的全路径
+type :页面类型
 ```
 ```
 EJURouterPageTypeNative          = 0, （原生）
