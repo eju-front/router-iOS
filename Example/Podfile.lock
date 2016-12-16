@@ -1,0 +1,19 @@
+PODS:
+  - EJURouterSDK (0.1.0)
+  - Kiwi (2.4.0)
+
+DEPENDENCIES:
+  - EJURouterSDK (from `../`)
+  - Kiwi
+
+EXTERNAL SOURCES:
+  EJURouterSDK:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  EJURouterSDK: 3dd37510d681d75ea97676c0adf54761b27a3e22
+  Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
+
+PODFILE CHECKSUM: 4044a0c4ae419f5843073dc6309a478c6b61e393
+
+COCOAPODS: 1.1.1

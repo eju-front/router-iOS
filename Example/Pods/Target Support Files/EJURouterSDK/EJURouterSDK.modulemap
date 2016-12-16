@@ -1,0 +1,6 @@
+framework module EJURouterSDK {
+  umbrella header "EJURouterSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}

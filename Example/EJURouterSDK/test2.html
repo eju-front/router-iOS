@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+    <!--zip库-->
+    <script src="lib/dist/jszip.min.js"></script>
+    <script src="getQueryString.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+        }
+        div {
+            text-align: center;
+            margin: 30px ;
+            font-size: 13px;
+        }
+        label {
+            display: inline-block;
+            width: 180px;
+            text-align: right;
+        }
+        input {
+            width: 150px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>在线打包</h1>
+    <div>
+        <label for="">请填写您的AppId：</label>
+        <input type="text" placeholder="123456" id="appid">
+    </div>
+    <div>
+        <label for="">请填写您的应用名称：</label>
+        <input type="text" placeholder="择家" id="appname">
+    </div>
+    <div>
+        <label for="">请选择证书文件：</label>
+        <input type="file" id="cerfile">
+    </div>
+    <div>
+        <label for="">请填写证书安装密码：</label>
+        <input type="password" id="cerpwd">
+    </div>
+    <div>
+        <label for="">请选择描述文件：</label>
+        <input type="file" id="provisionfile">
+    </div>
+    <div>
+        <label for="">请填写BundleIdentifer：</label>
+        <input type="text" placeholder="com.cric.example" id="bundleid">
+    </div>
+    <div>
+        <input type="submit" id="submit">
+    </div>
+</body>
+
+<script>
+    $(document).ready(function(){
+        getQueryString()
+        $('#submit').click(function () {
+            var appidInput =  $('#appid')
+            var cerfileInput = $('#cerfile')[0]
+            var cerpwdInput = $('#cerpwd')
+            var provisionfileInput = $('#provisionfile')[0]
+            var bundleidInput = $('#bundleid')
+            var appnameInput = $('#appname')
+            var cerfile = cerfileInput.files[0]
+
+            if (!appidInput.val()) {
+                alert('请输入AppID')
+                return
+            }
+//            if (!cerpwdInput.val()) {
+//                alert('请输入证书密码')
+//            }
+            if (!appnameInput.val()) {
+                alert('请输入AppName')
+                return
+            }
+            if (!bundleidInput.val()) {
+                alert('请输入Bundle Identifier')
+                return
+            }
+            if (cerfile) {
+                if (cerfile.name.indexOf('cer') == -1) {
+                    alert('证书文件格式错误')
+                    return
+                }
+            } else {
+                alert('请先上传证书文件')
+                return
+            }
+
+            var provisionfile = provisionfileInput.files[0]
+            if (provisionfile) {
+                if (provisionfile.name.indexOf('mobileprovision') == -1) {
+                    alert('描述文件格式错误')
+                    return
+                }
+            } else {
+                alert('请先上传描述文件')
+                return
+            }
+
+            var zip = new JSZip()
+            zip.file(cerfile.name, cerfile)
+            zip.file(provisionfile.name, provisionfile)
+            zip.generateAsync({type:'blob'}).then(function(content) {
+                var formData = new FormData()
+                formData.append('file', content)
+                $.ajax({
+                    type:"POST",
+                    url:'http://localhost:4567/online_package',
+                    data:formData,
+                    processData: false,
+                    contentType: false,
+                    headers:{
+                        'app_id':appidInput.val(),
+                        'bundle_id':bundleidInput.val(),
+                        'cer_pwd':cerpwdInput.val(),
+                        'app_name':appnameInput.val(),
+                    },
+                    success:function(data, statuscode){
+
+                        console.log(statuscode)
+                        window.location = 'http://localhost:4567/download_ipa?'+data
+                    },
+                    error:function (error) {
+                        console.log(error)
+                    }
+                })
+            })
+        })
+    })
+</script>
+</html>

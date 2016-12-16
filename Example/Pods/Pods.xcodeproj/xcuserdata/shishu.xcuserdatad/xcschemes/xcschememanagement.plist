@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>EJURouterSDK.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Kiwi.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-EJURouterSDK_Example.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-EJURouterSDK_Tests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>0BD108EA0065CC2BE29C690ED6A0887E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7ED586B07F7CD4F06E490A82C1E2A356</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C175964A143277B962C9FBB0CCB1A95A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E7F1CFB12A8169BD11D9782BE9774E2E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

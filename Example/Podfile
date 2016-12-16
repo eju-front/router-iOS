@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'EJURouterSDK_Example' do
+  pod 'EJURouterSDK', :path => '../'
+
+  target 'EJURouterSDK_Tests' do
+    inherit! :search_paths
+
+    pod 'Kiwi'
+  end
+end
