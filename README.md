@@ -34,47 +34,47 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-<string>V1.0.0</string>
-<dict>
-<key>identifier</key>
-<string>native</string>
-<key>resource</key>
-<string>TestNativeViewController</string>
-<key>type</key>
-<string>0</string>
-<key>description</key>
-<string>Native</string>
-</dict>
-<dict>
-<key>identifier</key>
-<string>localhtml1</string>
-<key>resource</key>
-<string>test1.html</string>
-<key>type</key>
-<string>1</string>
-<key>description</key>
-<string>LocalHtml</string>
-</dict>
-<dict>
-<key>identifier</key>
-<string>localhtml2</string>
-<key>resource</key>
-<string>test2.html</string>
-<key>type</key>
-<string>1</string>
-<key>description</key>
-<string>LocalHtml</string>
-</dict>
-<dict>
-<key>identifier</key>
-<string>web</string>
-<key>resource</key>
-<string>http://news.baidu.com/</string>
-<key>type</key>
-<string>2</string>
-<key>description</key>
-<string>Web</string>
-</dict>
+    <string>V1.0.0</string>
+    <dict>
+        <key>identifier</key>
+        <string>native</string>
+        <key>resource</key>
+        <string>TestNativeViewController</string>
+        <key>type</key>
+        <string>0</string>
+        <key>description</key>
+        <string>Native</string>
+    </dict>
+    <dict>
+        <key>identifier</key>
+        <string>localhtml1</string>
+        <key>resource</key>
+        <string>test1.html</string>
+        <key>type</key>
+        <string>1</string>
+        <key>description</key>
+        <string>LocalHtml</string>
+    </dict>
+    <dict>
+        <key>identifier</key>
+        <string>localhtml2</string>
+        <key>resource</key>
+        <string>test2.html</string>
+        <key>type</key>
+        <string>1</string>
+        <key>description</key>
+        <string>LocalHtml</string>
+    </dict>
+    <dict>
+        <key>identifier</key>
+        <string>web</string>
+        <key>resource</key>
+        <string>http://news.baidu.com/</string>
+        <key>type</key>
+        <string>2</string>
+        <key>description</key>
+        <string>Web</string>
+    </dict>
 </array>
 </plist>
 ~~~
