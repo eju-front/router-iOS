@@ -99,5 +99,5 @@ APP保留一份默认的 ```viewmap``` 文件,作为初始化文件，初始版�
 
 ## 注意事项
 * 网页端人员通过`URL`打开`Native`页面时，需要和移动端提前约定好`Scheme`；
-* 网页端通过`URL`带参打开`Native`页面是，需要注意移动端暂时只接收`String`和`JSON`类型参数，移动端需要注意在接收定义接收参数类型时，只能为`NSString`、`NSDictionary`、`NSArray`；
+* 网页端通过`URL`带参打开`Native`页面是，需要注意移动端暂时只接收`String`和`JSON`类型参数，移动端需要注意在定义接收参数类型时，只能为`NSString`、`NSDictionary`、`NSArray`；
 * `map`表中需要指定版本。
