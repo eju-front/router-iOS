@@ -1,5 +1,0 @@
-{
-language: objective-c\
-xcode_workspace: Example/EJURouterSDK.xcworkspace\
-xcode_scheme: Pods-EJURouterSDK_Tests
-}
