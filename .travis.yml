@@ -8,4 +8,5 @@ script:
         - security default-keychain -s $KEY_CHAIN
         - security unlock-keychain -p travis $KEY_CHAIN
         - security set-keychain-settings -t 3600 -u $KEY_CHAIN
+        - xctool -workspace Example/EJURouterSDK.xcworkspace -scheme EJURouterSDK-Example build test
  
