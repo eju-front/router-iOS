@@ -2,3 +2,4 @@
 language: objective-c  #1
 xcode_workspace: Example/EJURouterSDK.xcworkspace #2
 xcode_scheme: EJURouterSDK-Example #3
+osx_image: xcode8 #4
