@@ -1,6 +1,6 @@
 # EJURouter
 
-[![CI Status](http://img.shields.io/travis/seth/EJURouterSDK.svg?style=flat)](https://travis-ci.org/seth/EJURouterSDK)
+[![Build Status](https://travis-ci.org/eju-front/router-iOS.svg?branch=master)](https://travis-ci.org/eju-front/router-iOS)
 [![Version](https://img.shields.io/cocoapods/v/EJURouterSDK.svg?style=flat)](http://cocoapods.org/pods/EJURouterSDK)
 [![License](https://img.shields.io/cocoapods/l/EJURouterSDK.svg?style=flat)](http://cocoapods.org/pods/EJURouterSDK)
 [![Platform](https://img.shields.io/cocoapods/p/EJURouterSDK.svg?style=flat)](http://cocoapods.org/pods/EJURouterSDK)
