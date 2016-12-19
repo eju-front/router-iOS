@@ -78,7 +78,7 @@
     [_webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     [_progressView setProgress:[change[@"new"] floatValue] animated:YES];
     NSLog(@"%@",change[@"new"]);
     if ([change[@"new"] floatValue] == 1.0) {
