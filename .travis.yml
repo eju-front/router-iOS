@@ -2,12 +2,9 @@
 language: objective-c  #1
 xcode_workspace: Example/EJURouterSDK.xcworkspace #2
 xcode_scheme: EJURouterSDK-Example #3
-script: KEY_CHAIN=ios-build.keychain\
-security create-keychain -p travis $KEY_CHAIN\
-# Make the keychain the default so identities are found
-security default-keychain -s $KEY_CHAIN\
-# Unlock the keychain
-security unlock-keychain -p travis $KEY_CHAIN\
-# Set keychain locking timeout to 3600 seconds
-security set-keychain-settings -t 3600 -u $KEY_CHAIN
+script: - KEY_CHAIN=ios-build.keychain
+        - security create-keychain -p travis $KEY_CHAIN
+        - security default-keychain -s $KEY_CHAIN
+        - security unlock-keychain -p travis $KEY_CHAIN
+        - security set-keychain-settings -t 3600 -u $KEY_CHAIN
  
