@@ -7,5 +7,5 @@ before_install:
 script: 
         - cd Example
         - xcodebuild -list
-        - xctool -workspace EJURouterSDK.xcworkspace -scheme EJURouterSDK-Example build test
+        - xctool build -workspace EJURouterSDK.xcworkspace -scheme EJURouterSDK-Example
         
