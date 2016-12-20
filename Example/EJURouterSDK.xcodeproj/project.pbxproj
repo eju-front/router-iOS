@@ -20,13 +20,13 @@
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
-		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		7904C01A559EED46275D5A03 /* Pods_EJURouterSDK_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 730FAF32B39524E5046BCD3A /* Pods_EJURouterSDK_Example.framework */; };
 		830CE08D1DE813AC00915152 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 830CE08C1DE813AC00915152 /* LaunchScreen.storyboard */; };
 		8316A5FF1DEE844F0039EE9D /* vcmap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8316A5FE1DEE844F0039EE9D /* vcmap.plist */; };
 		8316A60F1DEEC5490039EE9D /* TestNativeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8316A60E1DEEC5490039EE9D /* TestNativeViewController.m */; };
 		8316A6111DEEC89A0039EE9D /* test2.html in Resources */ = {isa = PBXBuildFile; fileRef = 8316A6101DEEC89A0039EE9D /* test2.html */; };
 		8316A6151DF01B9D0039EE9D /* test1.html in Resources */ = {isa = PBXBuildFile; fileRef = 8316A6141DF01B9D0039EE9D /* test1.html */; };
+		839ED0EB1E0902AF001B77DF /* EJU_ROUTER_UnitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FF083E1DF7AACC00AE6A37 /* EJU_ROUTER_UnitTest.m */; };
 		83FF08351DF54A2500AE6A37 /* getQueryString.js in Resources */ = {isa = PBXBuildFile; fileRef = 83FF08341DF54A2500AE6A37 /* getQueryString.js */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 /* End PBXBuildFile section */
@@ -64,7 +64,6 @@
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		730FAF32B39524E5046BCD3A /* Pods_EJURouterSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EJURouterSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		830CE08C1DE813AC00915152 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -188,7 +187,6 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				6003F5BB195388D20070C39A /* Tests.m */,
 				83FF083E1DF7AACC00AE6A37 /* EJU_ROUTER_UnitTest.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
@@ -431,7 +429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				839ED0EB1E0902AF001B77DF /* EJU_ROUTER_UnitTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
