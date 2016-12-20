@@ -2,6 +2,7 @@
 language: objective-c  #1
 osx_image: xcode8.2
 script: 
+        - cd Example
         - xcodebuild -list
-        - xcodebuild -workspace Example/EJURouterSDK.xcworkspace -scheme EJURouterSDK-Example build CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO
-        - xcodebuild -workspace Example/EJURouterSDK.xcworkspace -scheme EJURouterSDK_Tests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s Plus,OS=10.1' test CODE_SIGNING_REQUIRED=NO
+        - xcodebuild -workspace EJURouterSDK.xcworkspace -scheme EJURouterSDK-Example build CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO
+        - xcodebuild -workspace EJURouterSDK.xcworkspace -scheme EJURouterSDK_Tests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s Plus,OS=10.1' test CODE_SIGNING_REQUIRED=NO
