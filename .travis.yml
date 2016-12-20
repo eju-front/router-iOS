@@ -5,4 +5,4 @@ script:
         - cd Example
         - xcodebuild -list
         - xctool -workspace EJURouterSDK.xcworkspace -scheme EJURouterSDK-Example build test
-        - xctool -workspace EJURouterSDK.xcworkspace -scheme EJURouterSDK_Tests test
+        
