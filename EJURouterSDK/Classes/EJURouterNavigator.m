@@ -2,8 +2,8 @@
 //  EJUNavigator.m
 //  Pods
 //
-//  Created by 施澍 on 2016/11/25.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #import "EJURouterNavigator.h"
@@ -14,9 +14,11 @@
 #import "EJURouterSDK.h"
 #import "EJURouterHelper.h"
 
-@implementation EJURouterNavigator
+NSString *EJURouterIdKey                = @"identifier";
+NSString *EJURouterParamsKey            = @"parameters";
+static EJURouterNavigator *_navigator   = nil;
 
-static EJURouterNavigator *_navigator;
+@implementation EJURouterNavigator
 
 #pragma mark - SharedInstance
 + (instancetype)sharedNavigator
@@ -180,7 +182,7 @@ static EJURouterNavigator *_navigator;
             @throw exception;
         }
         
-        //创建vc        
+        //创建vc
         if (isFromXib) {                    // xib
             vc = [(UIViewController *)[VCClass alloc]initWithNibName:NSStringFromClass(VCClass) bundle:[NSBundle mainBundle]];
         } else if (isFromSB) {              // sb
@@ -252,20 +254,21 @@ static EJURouterNavigator *_navigator;
             if (!filePath)
                 @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"cannot find file named %@", model.resource] userInfo:nil];
             
-            NSURL *url = [EJURouterHelper appendUrlStr:filePath withparams:params];
+            NSURL *url = [EJURouterHelper getUrlFromResource:filePath];
             if (!url)
                 @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"nil url" userInfo:nil];
+            [(EJURouterWebViewController *)vc setParams:params];
             [(EJURouterWebViewController *)vc setUrl:url];
-            
             break;
         }
         case EJURouterPageTypeWeb:
         {
             // 拼接url
-            NSURL *url = [EJURouterHelper appendUrlStr:model.resource withparams:params];
+            NSURL *url = [EJURouterHelper getUrlFromResource:model.resource];
             if (!url)
                 @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"nil url" userInfo:nil];
             [(EJURouterWebViewController *)vc setUrl:url];
+            [(EJURouterWebViewController *)vc setParams:params];
             break;
         }
         default:
@@ -281,68 +284,68 @@ static EJURouterNavigator *_navigator;
     return [self.map modelWithIdentifier:identifier];
 }
 
+- (BOOL)openApp:(NSURL *)url
+{
+    UIApplication *application = [UIApplication sharedApplication];
+    BOOL result = [application canOpenURL:url];
+    if (result) {
+        [application openURL:url];
+    }
+    return result;
+}
 
 #pragma mark - Open Url(从h5页面打开页面)
 - (BOOL)willOpenUrlInNewPage:(NSURL *)url
 {
     if (url) {
-        // web
-        if ([url.scheme containsString:@"http"]) {
-            
-//            [self openWebVcWithUrl:url];
+        if ([url.scheme hasPrefix:@"http"]) {
             return NO;
+        } else if (![url.scheme isEqualToString:self.configuration.urlScheme]) {
             
-        } else if ([url.scheme isEqualToString:self.configuration.urlScheme]) {
-            //id
-            NSString *identifier            = url.host;
-            EJURouterDataModel *model       = [self.map modelWithIdentifier:identifier];
+            return [self openApp:url];
+        } else if (![url.host isEqualToString:self.configuration.urlHost]) {
             
-            if (model.type == EJURouterPageTypeNative) {
-                //本地
-                //参数
+            return [self openApp:url];
+        }
+        
+        //参数
+        NSMutableDictionary *params = [EJURouterHelper serilizeUrlQuery:url.query];
+        
+        //id
+        NSString *identifier            = params[EJURouterIdKey];
+        [params removeObjectForKey:EJURouterIdKey];
+        
+        EJURouterDataModel *model       = [self.map modelWithIdentifier:identifier];
+        
+        if (model.type == EJURouterPageTypeNative) {
+            //本地
+            // 打开页面
+            [self openId:identifier params:params onCompletion:nil];
+            return YES;
+            // local html
+        } else if (model.type == EJURouterPageTypeLocalHtml) {
+            NSString *filePath = [[NSBundle mainBundle]pathForResource:model.resource ofType:nil];
+            if (filePath) {
+                NSURL *relativeUrl = [NSURL fileURLWithPath:filePath];
                 NSDictionary *params = [EJURouterHelper serilizeUrlQuery:url.query];
-                // 打开页面
-                [self openId:identifier params:params onCompletion:nil];
-                return YES;
-                // local html
-            } else if (model.type == EJURouterPageTypeLocalHtml) {
-                Class VCClass = NSClassFromString(model.className);
-                if (!VCClass) {
-                    return NO;
-                }
-                NSString *filePath = [[NSBundle mainBundle]pathForResource:model.resource ofType:nil];
-                if (filePath) {
-                    NSURL *relativeUrl = [NSURL fileURLWithPath:filePath];
-                    if (url.query) {
-                        relativeUrl = [NSURL URLWithString:[@"?" stringByAppendingString:url.query] relativeToURL:relativeUrl];
-                    }
-                    [self openWebVcWithUrl:relativeUrl];
-                    return NO;
-                } else {
-                    [self gotoNotFoundPageWithFromVC:nil];
-                    return YES;
-                }
-            }
-        }else {
-            UIApplication *application = [UIApplication sharedApplication];
-            if ([application canOpenURL:url]) {
-                [application openURL:url];
+                [self openWebVcWithUrl:relativeUrl andParams:params];
+                return NO;
             } else {
-                NSLog(@"wrong scheme!");
+                [self gotoNotFoundPageWithFromVC:nil];
+                return YES;
             }
-            return NO;
         }
     }
     return NO;
 }
 
-- (void)openWebVcWithUrl:(NSURL *)url {
+- (void)openWebVcWithUrl:(NSURL *)url andParams:(NSDictionary *)params {
     EJURouterWebViewController *webVc = self.navigationController.topViewController;
     if ([webVc isKindOfClass:[EJURouterWebViewController class]]) {
         [webVc setUrl:url];
+        [webVc setParams:params];
+        [webVc loadWithUrl:url andParams:params];
     }
-    //默认push
-//    [self.navigationController pushViewController:webVc animated:YES];
 }
 
 @end

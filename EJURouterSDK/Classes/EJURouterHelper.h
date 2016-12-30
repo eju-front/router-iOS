@@ -2,13 +2,21 @@
 //  EJURouterURLHelper.h
 //  Pods
 //
-//  Created by 施澍 on 2016/12/6.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 @interface EJURouterHelper : NSObject
+
+/**
+ 将map表中resource转换成URL
+
+ @param resource map中resource字段值
+ @return URL
+ */
++ (NSURL *)getUrlFromResource:(NSString *)resource;
 
 /**
  拼接URL参数
@@ -27,7 +35,7 @@
  
  @return 字典
  */
-+ (NSDictionary *)serilizeUrlQuery:(NSString *)query;
++ (NSMutableDictionary *)serilizeUrlQuery:(NSString *)query;
 
 
 /**

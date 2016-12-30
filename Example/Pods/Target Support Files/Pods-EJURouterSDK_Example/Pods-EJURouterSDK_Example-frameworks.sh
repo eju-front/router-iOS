@@ -85,7 +85,9 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/EJURouterSDK/EJURouterSDK.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/KissXML/KissXML.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/EJURouterSDK/EJURouterSDK.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/KissXML/KissXML.framework"
 fi

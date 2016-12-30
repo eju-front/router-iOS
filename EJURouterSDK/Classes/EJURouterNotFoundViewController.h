@@ -2,8 +2,8 @@
 //  EJURouterNotFoundViewController.h
 //  Pods
 //
-//  Created by 施澍 on 2016/12/2.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

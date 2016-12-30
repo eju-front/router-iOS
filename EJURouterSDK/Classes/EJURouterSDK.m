@@ -2,8 +2,8 @@
 //  EJURouterSDK.m
 //  Pods
 //
-//  Created by 施澍 on 2016/11/25.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #import "EJURouterSDK.h"
@@ -32,11 +32,12 @@
 
 @implementation EJURouterConfiguration
 
-+ (instancetype)configurationWithNotFoundPageClass:(Class)notFoundPageClass urlScheme:(NSString *)urlScheme updateRequest:(NSURLRequest *)updateRequest
++ (instancetype)configurationWithNotFoundPageClass:(Class)notFoundPageClass urlScheme:(NSString *)scheme urlHost:(NSString *)host updateRequest:(NSURLRequest *)updateRequest
 {
     EJURouterConfiguration *config = [[self alloc]init];
     config.notFoundPageClass = notFoundPageClass;
-    config.urlScheme = urlScheme;
+    config.urlScheme = scheme;
+    config.urlHost = host;
     config.updateRequest = updateRequest;
     return config;
 }
@@ -46,6 +47,13 @@
         _urlScheme = @"ejurouter";
     }
     return _urlScheme;
+}
+
+- (NSString *)host {
+    if (!_urlHost) {
+        _urlHost = @"page";
+    }
+    return _urlHost;
 }
 
 @end

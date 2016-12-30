@@ -8,29 +8,26 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>0</integer>
+		</dict>
+		<key>KissXML.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Kiwi.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 		<key>Pods-EJURouterSDK_Example.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-EJURouterSDK_Tests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -40,7 +37,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7ED586B07F7CD4F06E490A82C1E2A356</key>
+		<key>3055F339F133452EF58D599AC10F0EC8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -50,7 +47,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E7F1CFB12A8169BD11D9782BE9774E2E</key>
+		<key>C6591A7C91E7493F5D12BF3E875A2CF8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D475706DC6BCCC1565A48225A7CF06FC</key>
 		<dict>
 			<key>primary</key>
 			<true/>

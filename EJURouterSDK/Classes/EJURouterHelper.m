@@ -2,8 +2,8 @@
 //  EJURouterURLHelper.m
 //  Pods
 //
-//  Created by 施澍 on 2016/12/6.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #pragma GCC diagnostic ignored "-Wselector"
@@ -12,6 +12,7 @@
 
 #import <Availability.h>
 #import "EJURouterHelper.h"
+#import "EJURouterSDKDefine.h"
 
 #if !__has_feature(objc_arc)
 #error This library requires automatic reference counting
@@ -20,17 +21,26 @@
 
 @implementation EJURouterHelper
 
++ (NSURL *)getUrlFromResource:(NSString *)resource
+{
+    if (!resource.length)
+        return nil;
+    resource = [resource stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *relativeUrl = [resource hasPrefix:@"http"]?[NSURL URLWithString:resource]:[NSURL fileURLWithPath:resource];
+    return relativeUrl;
+}
+
 + (NSURL *)appendUrlStr:(NSString *)urlStr withparams:(NSDictionary *)params
 {
-    if (!urlStr.length)
+    NSURL *relativeUrl = [self getUrlFromResource:urlStr];
+    if (!relativeUrl)
         return nil;
-    
-    NSURL *relativeUrl = [urlStr hasPrefix:@"http"]?[NSURL URLWithString:urlStr]:[NSURL fileURLWithPath:urlStr];
     
     NSMutableString *paramsStr = [NSMutableString string];
     if (![params isKindOfClass:[NSDictionary class]]) {
         return relativeUrl;
     }
+    
     [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         // 忽略key不是string类型的参数
         if ([key isKindOfClass:[NSString class]]) {
@@ -55,7 +65,8 @@
     return relativeUrl;
 }
 
-+ (NSDictionary *)serilizeUrlQuery:(NSString *)query {
++ (NSMutableDictionary *)serilizeUrlQuery:(NSString *)query
+{
     query = [query stringByRemovingPercentEncoding];
     NSArray *components = [query componentsSeparatedByString:@"&"];
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -74,6 +85,12 @@
                 [params setValue:value forKey:key];
             }
         }
+    }
+    
+    NSDictionary *otherParams = params[EJURouterParamsKey];
+    if (otherParams) {
+        [params removeObjectForKey:EJURouterParamsKey];
+        [params addEntriesFromDictionary:otherParams];
     }
     
     return params;
@@ -95,7 +112,8 @@
     return urlScheme;
 }
 
-+ (NSString *)fileHashWithData:(NSData *)fileData {
++ (NSString *)fileHashWithData:(NSData *)fileData
+{
     
     // Declare needed variables
     CFStringRef result = NULL;

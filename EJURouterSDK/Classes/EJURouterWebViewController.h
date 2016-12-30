@@ -2,14 +2,17 @@
 //  EJURouterWebViewController.h
 //  Pods
 //
-//  Created by 施澍 on 2016/11/25.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 @interface EJURouterWebViewController : UIViewController
 
-@property (nonatomic, strong) NSURL *url;
+@property (nonatomic, strong) NSURL         *url;
+@property (nonatomic, copy)   NSDictionary  *params;
+
+- (void)loadWithUrl:(NSURL *)url andParams:(NSDictionary *)params;
 
 @end

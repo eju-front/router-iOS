@@ -49,7 +49,6 @@
                                      @"age":@"29",
                                      @"height":@100,
                                      @"children":@[@"大王", @"小王"],
-                                     @"birthday":[NSDate date]
                                      };
             [[EJURouterNavigator sharedNavigator]openId:@"localhtml1" params:params onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
                 NSLog(@"+++%ld", resultCode);
@@ -63,7 +62,6 @@
                                      @"age":@"29",
                                      @"height":@100,
                                      @"children":@[@"大王", @"小王"],
-                                     @"birthday":[NSDate date]
                                      };
             // web
             [[EJURouterNavigator sharedNavigator]openId:@"web" params:params onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7ED586B07F7CD4F06E490A82C1E2A356"
+               BlueprintIdentifier = "C6591A7C91E7493F5D12BF3E875A2CF8"
                BuildableName = "Pods_EJURouterSDK_Example.framework"
                BlueprintName = "Pods-EJURouterSDK_Example"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7ED586B07F7CD4F06E490A82C1E2A356"
+            BlueprintIdentifier = "C6591A7C91E7493F5D12BF3E875A2CF8"
             BuildableName = "Pods_EJURouterSDK_Example.framework"
             BlueprintName = "Pods-EJURouterSDK_Example"
             ReferencedContainer = "container:Pods.xcodeproj">

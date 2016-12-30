@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'E7F1CFB12A8169BD11D9782BE9774E2E'
+               BlueprintIdentifier = 'D475706DC6BCCC1565A48225A7CF06FC'
                BlueprintName = 'EJURouterSDK'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'EJURouterSDK.framework'>

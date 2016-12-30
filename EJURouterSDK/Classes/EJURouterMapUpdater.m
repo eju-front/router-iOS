@@ -2,8 +2,8 @@
 //  EJURouterMapUpdater.m
 //  Pods
 //
-//  Created by 施澍 on 2016/11/29.
-//
+//  Created by Seth on 11/25/2016.
+//  Copyright © 2016年 EJU. All rights reserved.
 //
 
 #import "EJURouterMapUpdater.h"
@@ -20,33 +20,36 @@
     
     if (config.updateRequest) {
         [self startRequestWithRequest:config.updateRequest completionBlock:^(NSData *data) {
-                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (!data)
+                return ;
+            
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            
+            EJURouterVCMap *map = [EJURouterNavigator sharedNavigator].map;
+            // 匹对version
+            NSString *localVersion = map.version;
+            NSString *onlineVersion = responseDic[@"version"];
+            
+            if ([localVersion compare:onlineVersion] == NSOrderedAscending) {
+                NSString *onlineMd5 = responseDic[@"md5"];
+                NSString *downloadUrlStr = responseDic[@"downloadUrl"];
                 
-                EJURouterVCMap *map = [EJURouterNavigator sharedNavigator].map;
-                // 匹对version
-                NSString *localVersion = map.version;
-                NSString *onlineVersion = responseDic[@"version"];
-                
-                if ([localVersion compare:onlineVersion] == NSOrderedAscending) {
-                    NSString *onlineMd5 = responseDic[@"md5"];
-                    NSString *downloadUrlStr = responseDic[@"downloadUrl"];
-                    
-                    NSURL *url = [NSURL URLWithString:downloadUrlStr];
-                    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                    [self startRequestWithRequest:request completionBlock:^(NSData *data) {
-                        NSString *localMd5 = [EJURouterHelper fileHashWithData:data];
-                        if ([localMd5 isEqualToString:onlineMd5]) {
-                            if (data) {
-                                @try {
-                                    [data writeToFile:map.downloadPath atomically:YES];
-                                } @catch (NSException *exception) {
-                                    NSFileManager *fm = [NSFileManager defaultManager];
-                                    [fm removeItemAtPath:map.downloadPath error:nil];
-                                }
+                NSURL *url = [NSURL URLWithString:downloadUrlStr];
+                NSURLRequest *request = [NSURLRequest requestWithURL:url];
+                [self startRequestWithRequest:request completionBlock:^(NSData *data) {
+                    NSString *localMd5 = [EJURouterHelper fileHashWithData:data];
+                    if ([localMd5 isEqualToString:onlineMd5]) {
+                        if (data) {
+                            @try {
+                                [data writeToFile:map.downloadPath atomically:YES];
+                            } @catch (NSException *exception) {
+                                NSFileManager *fm = [NSFileManager defaultManager];
+                                [fm removeItemAtPath:map.downloadPath error:nil];
                             }
                         }
-                    }];
-                }
+                    }
+                }];
+            }
         }];
     }
 }

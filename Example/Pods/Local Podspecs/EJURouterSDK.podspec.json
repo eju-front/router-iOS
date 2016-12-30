@@ -18,5 +18,10 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "EJURouterSDK/Classes/**/*"
+  "source_files": "EJURouterSDK/Classes/**/*",
+  "dependencies": {
+    "KissXML": [
+      "~> 5.1.2"
+    ]
+  }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-	<string>V1.0.0</string>
+	<string>V1.0.4</string>
 	<dict>
 		<key>identifier</key>
 		<string>native</string>
@@ -37,7 +37,7 @@
 		<key>identifier</key>
 		<string>web</string>
 		<key>resource</key>
-		<string>http://news.baidu.com/</string>
+		<string>http://127.0.0.1:8020/RouterTest/index.html</string>
 		<key>type</key>
 		<string>2</string>
 		<key>description</key>
