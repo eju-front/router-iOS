@@ -9,11 +9,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>KissXML.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Kiwi.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,27 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0BD108EA0065CC2BE29C690ED6A0887E</key>
+		<key>0A39B6A8C21FC634B7C29B68FD3D318C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3055F339F133452EF58D599AC10F0EC8</key>
+		<key>4715F61C363D79C3DDE20A95E39940A0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C175964A143277B962C9FBB0CCB1A95A</key>
+		<key>CFC033EB15A8DCED2F72CBF393902F87</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C6591A7C91E7493F5D12BF3E875A2CF8</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D475706DC6BCCC1565A48225A7CF06FC</key>
+		<key>E422EF9435660137EA316D47F520B4C3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
