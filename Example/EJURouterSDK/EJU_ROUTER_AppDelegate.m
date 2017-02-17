@@ -21,7 +21,44 @@
     EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFoundPageClass:nil urlScheme:@"ejurouter" urlHost:@"page" updateRequest:updateRequest];
     [EJURouterSDK startServiceWithConfiguration:config];
     
+    //注册监听
+    [self addNotifications];
+    
     return YES;
+}
+
+//注册监听
+- (void)addNotifications {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidStart:) name:@"WebViewDidStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidCommit:) name:@"WebViewDidCommit" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidFinish:) name:@"WebViewDidFinish" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidFail:) name:@"WebViewDidFail" object:nil];
+}
+
+// web页面开始加载时调用
+- (void)webViewDidStart:(NSNotification *)notification {
+    
+    NSLog(@"StartClass===%@",[notification.object class]);
+}
+
+// 当web页内容开始返回时调用
+- (void)webViewDidCommit:(NSNotification *)notification {
+    
+    NSLog(@"CommitClass===%@",[notification.object class]);
+}
+
+// web页面加载完成之后调用
+- (void)webViewDidFinish:(NSNotification *)notification {
+    
+    NSLog(@"FinishClass===%@",[notification.object class]);
+}
+
+// web页面加载失败时调用
+- (void)webViewDidFail:(NSNotification *)notification {
+    
+    NSLog(@"FailClass===%@",[notification.object class]);
+    NSLog(@"error====%@",[notification.userInfo objectForKey:@"error"]);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

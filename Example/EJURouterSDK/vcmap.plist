@@ -37,7 +37,7 @@
 		<key>identifier</key>
 		<string>web</string>
 		<key>resource</key>
-		<string>http://127.0.0.1:8020/RouterTest/index.html</string>
+		<string>http://10.0.60.95:8090/easyliveh5/</string>
 		<key>type</key>
 		<string>2</string>
 		<key>description</key>

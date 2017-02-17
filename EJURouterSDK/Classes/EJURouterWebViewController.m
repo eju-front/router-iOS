@@ -31,6 +31,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.navigationController.navigationBar.hidden = YES;    //**暂时**//
     _history = [[NSMutableArray alloc]init];
     _initialUrl = _url;
     [self addNavBtn];
@@ -44,7 +45,7 @@
 
 - (void)configUI
 {
-    if (self.navigationController) {
+    if (self.navigationController.navigationBar.hidden == NO) {
         _progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 0)];
         _webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     } else {
@@ -87,7 +88,7 @@
             htmlString = [[NSMutableString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             NSDictionary *dic = @{
                                   @"htmlString": htmlString,
-                                  @"baseUrl":[NSURL URLWithString:[url.scheme stringByAppendingFormat:@"://%@", url.host]],
+                                  @"baseUrl":url,
                                   @"params":params
                                   };
             [_history addObject:dic];
@@ -216,16 +217,20 @@
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     NSLog(@"start");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidStart" object:webView userInfo:nil];
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
     NSLog(@"commit");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidCommit" object:webView userInfo:nil];
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     NSLog(@"finish");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidFinish" object:webView userInfo:nil];
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         _progressView.progress = 0.0;
     });
@@ -239,6 +244,7 @@
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidFail" object:webView userInfo:@{@"error":error}];
     NSLog(@"%@", error);
 }
 

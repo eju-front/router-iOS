@@ -57,11 +57,15 @@
         }
         case 2:
         {
+//            NSDictionary *params = @{
+//                                     @"name":@"老王",
+//                                     @"age":@"29",
+//                                     @"height":@100,
+//                                     @"children":@[@"大王", @"小王"],
+//                                     };
+            
             NSDictionary *params = @{
-                                     @"name":@"老王",
-                                     @"age":@"29",
-                                     @"height":@100,
-                                     @"children":@[@"大王", @"小王"],
+                                     @"userId":@"6"
                                      };
             // web
             [[EJURouterNavigator sharedNavigator]openId:@"web" params:params onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
