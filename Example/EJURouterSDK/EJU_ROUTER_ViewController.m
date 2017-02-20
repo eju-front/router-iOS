@@ -36,7 +36,7 @@
                                         @"birthday":[NSDate date]
                                      };
             // native
-            [[EJURouterNavigator sharedNavigator]openId:@"native" params:params onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+            [[EJURouterNavigator sharedNavigator]openId:@"native" params:params jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
                 NSLog(@"+++%ld", resultCode);
             }];
             break;
@@ -50,7 +50,7 @@
                                      @"height":@100,
                                      @"children":@[@"大王", @"小王"],
                                      };
-            [[EJURouterNavigator sharedNavigator]openId:@"localhtml1" params:params onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+            [[EJURouterNavigator sharedNavigator]openId:@"localhtml1" params:params jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
                 NSLog(@"+++%ld", resultCode);
             }];
             break;
@@ -68,16 +68,25 @@
                                      @"userId":@"6"
                                      };
             // web
-            [[EJURouterNavigator sharedNavigator]openId:@"web" params:params onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+            [[EJURouterNavigator sharedNavigator]openId:@"web" params:params jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
                 NSLog(@"+++%ld", resultCode);
             }];
             break;
         }
         case 3:
-            [[EJURouterNavigator sharedNavigator]openId:@"123" onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+            [[EJURouterNavigator sharedNavigator]openId:@"123" jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
                 NSLog(@"+++%ld", resultCode);
             }];
             break;
+        case 4:
+        {
+            NSArray *jsFunctionArray = @[@"easyLiveShare"];
+            
+            [[EJURouterNavigator sharedNavigator]openId:@"web2" params:@{} jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+                NSLog(@"+++%ld", resultCode);
+            }];
+            break;
+        }
         default:
             break;
     }

@@ -9,6 +9,7 @@
 #import "EJU_ROUTER_AppDelegate.h"
 #import <EJURouterSDK/EJURouterSDK.h>
 #import <EJURouterSDK/EJURouterNavigator.h>
+#import <WebKit/WebKit.h>
 
 @implementation EJU_ROUTER_AppDelegate
 
@@ -34,6 +35,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidCommit:) name:@"WebViewDidCommit" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidFinish:) name:@"WebViewDidFinish" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidFail:) name:@"WebViewDidFail" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidReceiveScriptMessage:) name:@"WebViewDidReceiveScriptMessage" object:nil];
 }
 
 // web页面开始加载时调用
@@ -52,6 +54,13 @@
 - (void)webViewDidFinish:(NSNotification *)notification {
     
     NSLog(@"FinishClass===%@",[notification.object class]);
+    WKWebView *webView = (WKWebView *)notification.object;
+    
+    //native调js
+    [webView evaluateJavaScript:@"easyLiveShareSuccess('wechat')" completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+        //TODO
+        NSLog(@"response===%@ , error===%@",response,error);
+    }];
 }
 
 // web页面加载失败时调用
@@ -59,6 +68,13 @@
     
     NSLog(@"FailClass===%@",[notification.object class]);
     NSLog(@"error====%@",[notification.userInfo objectForKey:@"error"]);
+}
+
+// js调native，返回js传递的参数
+- (void)webViewDidReceiveScriptMessage:(NSNotification *)notification {
+    
+    WKScriptMessage *message = (WKScriptMessage *)notification.object;
+    NSLog(@"message.name=%@,message.body=%@",message.name,message.body);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

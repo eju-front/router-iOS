@@ -43,5 +43,15 @@
 		<key>description</key>
 		<string>Web</string>
 	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>web2</string>
+		<key>resource</key>
+		<string>http://10.0.60.95:8090/easyliveh5/demo.html</string>
+		<key>type</key>
+		<string>2</string>
+		<key>description</key>
+		<string>Web</string>
+	</dict>
 </array>
 </plist>

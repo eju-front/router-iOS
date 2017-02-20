@@ -40,8 +40,9 @@ static EJURouterNavigator *_navigator   = nil;
 }
 
 #pragma mark - Push
-- (void)openId:(NSString *)identifier
-  onCompletion:(EJURouterCompletionBlock)completion
+- (void) openId:(NSString *)identifier
+jsFunctionArray:(NSArray *)jsFunctionArray
+   onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
        isFromXib:NO
@@ -51,12 +52,14 @@ static EJURouterNavigator *_navigator   = nil;
           params:nil
           isPush:YES
           fromVC:nil
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
-- (void)openId:(NSString *)identifier
-        params:(NSDictionary *)params
-  onCompletion:(EJURouterCompletionBlock)completion
+- (void) openId:(NSString *)identifier
+         params:(NSDictionary *)params
+jsFunctionArray:(NSArray *)jsFunctionArray
+   onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
        isFromXib:NO
@@ -66,11 +69,13 @@ static EJURouterNavigator *_navigator   = nil;
           params:params
           isPush:YES
           fromVC:nil
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
 - (void)openFromXibWithId:(NSString *)identifier
                    params:(NSDictionary *)params
+          jsFunctionArray:(NSArray *)jsFunctionArray
              onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
@@ -81,6 +86,7 @@ static EJURouterNavigator *_navigator   = nil;
           params:params
           isPush:YES
           fromVC:nil
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
@@ -88,6 +94,7 @@ static EJURouterNavigator *_navigator   = nil;
                           sbName:(NSString *)sbName
                             sbId:(NSString *)sbId
                           params:(NSDictionary *)params
+                 jsFunctionArray:(NSArray *)jsFunctionArray
                     onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
@@ -98,6 +105,7 @@ static EJURouterNavigator *_navigator   = nil;
           params:params
           isPush:YES
           fromVC:nil
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
@@ -106,6 +114,7 @@ static EJURouterNavigator *_navigator   = nil;
 - (void)presentId:(NSString *)identifier
              from:(UIViewController *)fromVC
            params:(NSDictionary *)params
+  jsFunctionArray:(NSArray *)jsFunctionArray
      onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
@@ -116,12 +125,14 @@ static EJURouterNavigator *_navigator   = nil;
           params:params
           isPush:NO
           fromVC:fromVC
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
 - (void)presentXibWithId:(NSString *)identifier
                     from:(UIViewController *)fromVC
                   params:(NSDictionary *)params
+         jsFunctionArray:(NSArray *)jsFunctionArray
             onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
@@ -132,6 +143,7 @@ static EJURouterNavigator *_navigator   = nil;
           params:params
           isPush:NO
           fromVC:fromVC
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
@@ -140,6 +152,7 @@ static EJURouterNavigator *_navigator   = nil;
                    sbId:(NSString *)sbId
                    from:(UIViewController *)fromVC
                  params:(NSDictionary *)params
+        jsFunctionArray:(NSArray *)jsFunctionArray
            onCompletion:(EJURouterCompletionBlock)completion
 {
     [self openId:identifier
@@ -150,20 +163,22 @@ static EJURouterNavigator *_navigator   = nil;
           params:params
           isPush:NO
           fromVC:fromVC
+ jsFunctionArray:jsFunctionArray
     onCompletion:completion];
 }
 
 #pragma mark - OriginMethod
 
-- (void)openId:(NSString *)identifier
-     isFromXib:(BOOL)isFromXib
-      isFromSB:(BOOL)isFromSB
-        sbName:(NSString *)sbName
-          sbId:(NSString *)sbId
-        params:(NSDictionary *)params
-        isPush:(BOOL)isPush
-        fromVC:(UIViewController *)fromVC
-  onCompletion:(EJURouterCompletionBlock)completion
+- (void) openId:(NSString *)identifier
+      isFromXib:(BOOL)isFromXib
+       isFromSB:(BOOL)isFromSB
+         sbName:(NSString *)sbName
+           sbId:(NSString *)sbId
+         params:(NSDictionary *)params
+         isPush:(BOOL)isPush
+         fromVC:(UIViewController *)fromVC
+jsFunctionArray:(NSArray *)jsFunctionArray
+   onCompletion:(EJURouterCompletionBlock)completion
 {
     NSUInteger resultCode = EJURouterResponseStatusCodeUnknownError;
     UIViewController *vc = nil;
@@ -193,7 +208,7 @@ static EJURouterNavigator *_navigator   = nil;
         }
         
         //属性赋值
-        [self configVC:vc WithDataModel:model params:params];
+        [self configVC:vc WithDataModel:model params:params jsFunctionArray:jsFunctionArray];
         
         if (isPush) {           //推页面
             if ([self.navigationController isKindOfClass:[UINavigationController class]]) {
@@ -235,7 +250,7 @@ static EJURouterNavigator *_navigator   = nil;
 
 #pragma mark - ConfigVC
 
-- (void)configVC:(UIViewController *)vc WithDataModel:(EJURouterDataModel *)model params:(NSDictionary *)params
+- (void)configVC:(UIViewController *)vc WithDataModel:(EJURouterDataModel *)model params:(NSDictionary *)params jsFunctionArray:(NSMutableArray *)jsFunctionArray
 {
     switch (model.type) {
         case EJURouterPageTypeNative:
@@ -257,8 +272,9 @@ static EJURouterNavigator *_navigator   = nil;
             NSURL *url = [EJURouterHelper getUrlFromResource:filePath];
             if (!url)
                 @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"nil url" userInfo:nil];
-            [(EJURouterWebViewController *)vc setParams:params];
             [(EJURouterWebViewController *)vc setUrl:url];
+            [(EJURouterWebViewController *)vc setParams:params];
+            [(EJURouterWebViewController *)vc setJsFunctionNameArrays:jsFunctionArray];
             break;
         }
         case EJURouterPageTypeWeb:
@@ -269,6 +285,7 @@ static EJURouterNavigator *_navigator   = nil;
                 @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"nil url" userInfo:nil];
             [(EJURouterWebViewController *)vc setUrl:url];
             [(EJURouterWebViewController *)vc setParams:params];
+            [(EJURouterWebViewController *)vc setJsFunctionNameArrays:jsFunctionArray];
             break;
         }
         default:
@@ -320,7 +337,7 @@ static EJURouterNavigator *_navigator   = nil;
         if (model.type == EJURouterPageTypeNative) {
             //本地
             // 打开页面
-            [self openId:identifier params:params onCompletion:nil];
+            [self openId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
             return YES;
             // local html
         } else if (model.type == EJURouterPageTypeLocalHtml) {
@@ -328,7 +345,7 @@ static EJURouterNavigator *_navigator   = nil;
             if (filePath) {
                 NSURL *relativeUrl = [NSURL fileURLWithPath:filePath];
                 NSDictionary *params = [EJURouterHelper serilizeUrlQuery:url.query];
-                [self openWebVcWithUrl:relativeUrl andParams:params];
+                [self openWebVcWithUrl:relativeUrl andParams:params andJSFunctionArray:@[]];
                 return NO;
             } else {
                 [self gotoNotFoundPageWithFromVC:nil];
@@ -339,11 +356,12 @@ static EJURouterNavigator *_navigator   = nil;
     return NO;
 }
 
-- (void)openWebVcWithUrl:(NSURL *)url andParams:(NSDictionary *)params {
+- (void)openWebVcWithUrl:(NSURL *)url andParams:(NSDictionary *)params andJSFunctionArray:(NSArray *)jsFunctionArray {
     EJURouterWebViewController *webVc = self.navigationController.topViewController;
     if ([webVc isKindOfClass:[EJURouterWebViewController class]]) {
         [webVc setUrl:url];
         [webVc setParams:params];
+        [webVc setJsFunctionNameArrays:jsFunctionArray];
         [webVc loadWithUrl:url andParams:params];
     }
 }

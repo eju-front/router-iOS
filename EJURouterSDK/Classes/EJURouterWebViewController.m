@@ -11,7 +11,7 @@
 #import <Webkit/Webkit.h>
 #import "EJURouterWhiteList.h"
 
-@interface EJURouterWebViewController ()<WKNavigationDelegate>
+@interface EJURouterWebViewController ()<WKNavigationDelegate, WKScriptMessageHandler>
 {
     WKWebView *_webView;
     UIProgressView *_progressView;
@@ -31,7 +31,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.navigationController.navigationBar.hidden = YES;    //**暂时**//
     _history = [[NSMutableArray alloc]init];
     _initialUrl = _url;
     [self addNavBtn];
@@ -45,12 +44,22 @@
 
 - (void)configUI
 {
+    WKWebViewConfiguration * configuration = [[WKWebViewConfiguration alloc] init];
+    //注册供js调用的方法
+    WKUserContentController *userContentController = [[WKUserContentController alloc] init];
+    for (NSString *jsFunctionName in _jsFunctionNameArrays) {
+        [userContentController addScriptMessageHandler:self name:jsFunctionName];//注册name为easyLiveShare的js方法
+    }
+    configuration.userContentController = userContentController;
+    configuration.preferences.javaScriptEnabled = YES; //打开JavaScript交互 默认为YES
+
+    
     if (self.navigationController.navigationBar.hidden == NO) {
         _progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 0)];
-        _webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
-    } else {
+        _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) configuration:configuration];
+     } else {
         _progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 0)];
-        _webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height-20)];
+         _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height-20) configuration:configuration];
     }
     _progressView.progress = 0;
     _progressView.progressTintColor = [UIColor greenColor];
@@ -188,6 +197,12 @@
 //        [self loadRequest];
 //    }
 //}
+
+#pragma mark - WKScriptMessageHandler
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidReceiveScriptMessage" object:message userInfo:nil];
+}
 
 #pragma mark - NavigationDelegate
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
