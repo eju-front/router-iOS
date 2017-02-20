@@ -21,10 +21,72 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 [EJURouterSDK startServiceWithConfiguration:config];
 ~~~
 
+注册监听（监听`WKWebView`的加载过程）：
+
+~~~obj
+// web页面开始加载时调用
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidStart:) name:@"WebViewDidStart" object:nil];
+
+// 当web页内容开始返回时调用
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidCommit:) name:@"WebViewDidCommit" object:nil];
+
+// web页面加载完成之后调用
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidFinish:) name:@"WebViewDidFinish" object:nil];
+
+// web页面加载失败时调用
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidFail:) name:@"WebViewDidFail" object:nil];
+
+// js调native，返回js传递的参数
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewDidReceiveScriptMessage:) name:@"WebViewDidReceiveScriptMessage" object:nil];
+~~~
+
+实现监听事件：
+
+~~~obj
+// web页面开始加载时调用
+- (void)webViewDidStart:(NSNotification *)notification {
+    
+    NSLog(@"StartClass===%@",[notification.object class]);
+}
+
+// 当web页内容开始返回时调用
+- (void)webViewDidCommit:(NSNotification *)notification {
+    
+    NSLog(@"CommitClass===%@",[notification.object class]);
+}
+
+// web页面加载完成之后调用
+- (void)webViewDidFinish:(NSNotification *)notification {
+    
+    NSLog(@"FinishClass===%@",[notification.object class]);
+    WKWebView *webView = (WKWebView *)notification.object;
+    
+    //native调js
+    [webView evaluateJavaScript:@"easyLiveShareSuccess('wechat')" completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+        //TODO
+        NSLog(@"response===%@ , error===%@",response,error);
+    }];
+}
+
+// web页面加载失败时调用
+- (void)webViewDidFail:(NSNotification *)notification {
+    
+    NSLog(@"FailClass===%@",[notification.object class]);
+    NSLog(@"error====%@",[notification.userInfo objectForKey:@"error"]);
+}
+
+// js调native，返回js传递的参数
+- (void)webViewDidReceiveScriptMessage:(NSNotification *)notification {
+    
+    WKScriptMessage *message = (WKScriptMessage *)notification.object;
+    NSLog(@"message.name=%@,message.body=%@",message.name,message.body);
+}
+~~~
+
 打开页面：
 
 ~~~obj
-[[EJURouterNavigator sharedNavigator]openId:@"native" params:nil onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+[[EJURouterNavigator sharedNavigator]openId:@"native" params:@{} jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
 }];
 ~~~
 
@@ -34,47 +96,57 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-    <string>V1.0.0</string>
-    <dict>
-        <key>identifier</key>
-        <string>native</string>
-        <key>resource</key>
-        <string>TestNativeViewController</string>
-        <key>type</key>
-        <string>0</string>
-        <key>description</key>
-        <string>Native</string>
-    </dict>
-    <dict>
-        <key>identifier</key>
-        <string>localhtml1</string>
-        <key>resource</key>
-        <string>test1.html</string>
-        <key>type</key>
-        <string>1</string>
-        <key>description</key>
-        <string>LocalHtml</string>
-    </dict>
-    <dict>
-        <key>identifier</key>
-        <string>localhtml2</string>
-        <key>resource</key>
-        <string>test2.html</string>
-        <key>type</key>
-        <string>1</string>
-        <key>description</key>
-        <string>LocalHtml</string>
-    </dict>
-    <dict>
-        <key>identifier</key>
-        <string>web</string>
-        <key>resource</key>
-        <string>http://news.baidu.com/</string>
-        <key>type</key>
-        <string>2</string>
-        <key>description</key>
-        <string>Web</string>
-    </dict>
+	<string>V1.0.4</string>
+	<dict>
+		<key>identifier</key>
+		<string>native</string>
+		<key>resource</key>
+		<string>TestNativeViewController</string>
+		<key>type</key>
+		<string>0</string>
+		<key>description</key>
+		<string>Native</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>localhtml1</string>
+		<key>resource</key>
+		<string>test1.html</string>
+		<key>type</key>
+		<string>1</string>
+		<key>description</key>
+		<string>LocalHtml</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>localhtml2</string>
+		<key>resource</key>
+		<string>test2.html</string>
+		<key>type</key>
+		<string>1</string>
+		<key>description</key>
+		<string>LocalHtml</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>web</string>
+		<key>resource</key>
+		<string>http://10.0.60.95:8090/easyliveh5/</string>
+		<key>type</key>
+		<string>2</string>
+		<key>description</key>
+		<string>Web</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>web2</string>
+		<key>resource</key>
+		<string>http://10.0.60.95:8090/easyliveh5/demo.html</string>
+		<key>type</key>
+		<string>2</string>
+		<key>description</key>
+		<string>Web</string>
+	</dict>
 </array>
 </plist>
 ~~~
