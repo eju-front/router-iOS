@@ -71,19 +71,21 @@
     XCTAssertEqualObjects([EJURouterHelper serilizeUrlQuery:@"name=John&sss"][@"name"], @"John");
     XCTAssertEqual([EJURouterHelper serilizeUrlQuery:nil].allKeys.count, 0);
     
-    [[EJURouterNavigator sharedNavigator]openId:@"native" onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    NSArray *jsFunctionArray = @[@"easyLiveShare"];
+    
+    [[EJURouterNavigator sharedNavigator]openId:@"native" jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodeSuccess);
     }];
     
-    [[EJURouterNavigator sharedNavigator]openId:@"localhtml1" onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    [[EJURouterNavigator sharedNavigator]openId:@"localhtml1" jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodeSuccess);
     }];
     
-    [[EJURouterNavigator sharedNavigator]openId:@"web" onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    [[EJURouterNavigator sharedNavigator]openId:@"web" jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodeSuccess);
     }];
     
-    [[EJURouterNavigator sharedNavigator]openId:@"notfoundthispage" onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    [[EJURouterNavigator sharedNavigator]openId:@"notfoundthispage" jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodePageNotFound);
     }];
     
@@ -94,7 +96,7 @@
                              @"children":@[@"大王", @"小王"],
                              @"birthday":[NSDate date]
                              };
-    [[EJURouterNavigator sharedNavigator]openId:@"native" params:dic onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    [[EJURouterNavigator sharedNavigator]openId:@"native" params:dic jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqualObjects([vc valueForKey:@"name"], @"老王");
         XCTAssertEqualObjects([vc valueForKey:@"age"], @29);
         XCTAssertEqualObjects([vc valueForKey:@"height"], @100);
@@ -102,7 +104,7 @@
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodeSuccess);
     }];
     
-    [[EJURouterNavigator sharedNavigator]presentId:@"native" from:nil params:dic onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    [[EJURouterNavigator sharedNavigator]presentId:@"native" from:nil params:dic jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqualObjects([vc valueForKey:@"name"], @"老王");
         XCTAssertEqualObjects([vc valueForKey:@"age"], @29);
         XCTAssertEqualObjects([vc valueForKey:@"height"], @100);
@@ -110,7 +112,7 @@
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodeSuccess);
     }];
     
-    [[EJURouterNavigator sharedNavigator]presentXibWithId:@"native" from:nil params:dic onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+    [[EJURouterNavigator sharedNavigator]presentXibWithId:@"native" from:nil params:dic jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         NSLog(@"1234");
     }];
 }
