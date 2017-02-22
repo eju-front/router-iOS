@@ -14,7 +14,7 @@
 #import "EJURouterSDK.h"
 #import "EJURouterHelper.h"
 
-NSString *EJURouterIdKey                = @"identifier";
+NSString *EJURouterIdKey                = @"router_id";
 NSString *EJURouterParamsKey            = @"parameters";
 static EJURouterNavigator *_navigator   = nil;
 
@@ -318,9 +318,6 @@ jsFunctionArray:(NSArray *)jsFunctionArray
         if ([url.scheme hasPrefix:@"http"]) {
             return NO;
         } else if (![url.scheme isEqualToString:self.configuration.urlScheme]) {
-            
-            return [self openApp:url];
-        } else if (![url.host isEqualToString:self.configuration.urlHost]) {
             
             return [self openApp:url];
         }

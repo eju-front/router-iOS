@@ -49,7 +49,7 @@
     return _urlScheme;
 }
 
-- (NSString *)host {
+- (NSString *)urlHost {
     if (!_urlHost) {
         _urlHost = @"page";
     }
