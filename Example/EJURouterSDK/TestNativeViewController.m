@@ -54,7 +54,7 @@
         [dic setValue:_height forKey:@"height"];
     }
     if (_children) {
-        [dic setValue:_children forKey:@"_children"];
+        [dic setValue:_children forKey:@"children"];
     }
     if (_birthday) {
         [dic setValue:[NSString stringWithFormat:@"%@",_birthday] forKey:@"birthday"];

@@ -334,7 +334,16 @@ jsFunctionArray:(NSArray *)jsFunctionArray
         if (model.type == EJURouterPageTypeNative) {
             //本地
             // 打开页面
-            [self openId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+            if ([[NSBundle mainBundle] pathForResource:model.className ofType:@"nib"]) {    //xib
+                [self openFromXibWithId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+            }
+            else if ([[NSBundle mainBundle] pathForResource:model.className ofType:@"storyboardc"]) {      //storyboard
+                [self openFromStoryboardWithId:identifier sbName:@"" sbId:@"" params:params jsFunctionArray:@[] onCompletion:nil];
+            }
+            else {      //vc
+                
+                [self openId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+            }
             return YES;
             // local html
         } else if (model.type == EJURouterPageTypeLocalHtml) {

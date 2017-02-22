@@ -19,7 +19,7 @@
     NSString *updateUrlStr = @"http://172.29.32.215:10086/app/checkViewMap?appName=com.cric.EJURouterSDK-Example&os=ios";
     NSURL *updateUrl = [NSURL URLWithString:[updateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURLRequest *updateRequest = [NSURLRequest requestWithURL:updateUrl];
-    EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFoundPageClass:nil urlScheme:@"ejurouter" urlHost:@"page" updateRequest:updateRequest];
+    EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFoundPageClass:nil urlScheme:@"ejurouter" urlHost:@"" updateRequest:updateRequest];
     [EJURouterSDK startServiceWithConfiguration:config];
     
     //注册监听

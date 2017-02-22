@@ -65,7 +65,7 @@
 //                                     };
             
             NSDictionary *params = @{
-                                     @"userId":@"6"
+                                     @"accessToken":@"209f1368150dc26f5f78de12531f78a5"
                                      };
             // web
             [[EJURouterNavigator sharedNavigator]openId:@"web" params:params jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
