@@ -256,7 +256,14 @@ jsFunctionArray:(NSArray *)jsFunctionArray
         case EJURouterPageTypeNative:
         {
             [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-                NSString *setMethod = [NSString stringWithFormat:@"set%@:",[key capitalizedString]];
+                
+                //首字母改成大写
+                NSString *firstWord = [key substringWithRange:NSMakeRange(0, 1)];
+                firstWord = [firstWord capitalizedString];
+                NSMutableString *mutableKey = [NSMutableString stringWithFormat:@"%@",key];
+                [mutableKey replaceCharactersInRange:NSMakeRange(0, 1) withString:firstWord];
+                
+                NSString *setMethod = [NSString stringWithFormat:@"set%@:",mutableKey];
                 if ([vc respondsToSelector:NSSelectorFromString(setMethod)]) {
                     [vc setValue:obj forKey:key];
                 }
