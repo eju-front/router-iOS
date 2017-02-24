@@ -17,7 +17,7 @@ iOS8.0及以上
 NSString *updateUrlStr = @"";
 NSURL *updateUrl = [NSURL URLWithString:[updateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 NSURLRequest *updateRequest = [NSURLRequest requestWithURL:updateUrl];
-EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFoundPageClass:nil urlScheme:@"ejurouter" updateRequest:updateRequest];
+EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFoundPageClass:nil urlScheme:@"ejurouter" urlHost:@"" updateRequest:updateRequest];
 [EJURouterSDK startServiceWithConfiguration:config];
 ~~~
 
@@ -113,7 +113,7 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 		<key>resource</key>
 		<string>test1.html</string>
 		<key>type</key>
-		<string>1</string>
+		<string>2</string>
 		<key>description</key>
 		<string>LocalHtml</string>
 	</dict>
@@ -123,7 +123,7 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 		<key>resource</key>
 		<string>test2.html</string>
 		<key>type</key>
-		<string>1</string>
+		<string>2</string>
 		<key>description</key>
 		<string>LocalHtml</string>
 	</dict>
@@ -133,7 +133,7 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 		<key>resource</key>
 		<string>http://10.0.60.95:8090/easyliveh5/</string>
 		<key>type</key>
-		<string>2</string>
+		<string>3</string>
 		<key>description</key>
 		<string>Web</string>
 	</dict>
@@ -143,7 +143,7 @@ EJURouterConfiguration *config = [EJURouterConfiguration configurationWithNotFou
 		<key>resource</key>
 		<string>http://10.0.60.95:8090/easyliveh5/demo.html</string>
 		<key>type</key>
-		<string>2</string>
+		<string>3</string>
 		<key>description</key>
 		<string>Web</string>
 	</dict>
@@ -157,10 +157,11 @@ resource :页面的全路径
 type :页面类型
 ```
 ```
-EJURouterPageTypeNative          = 0, （原生）
-EJURouterPageTypeLocalHtml       = 1, （本地H5）
-EJURouterPageTypeWeb             = 2, （web）
-EJURouterPageTypeUnknown         = -1,（未知）
+EJURouterPageTypeNativeWithPush             = 0,  (原生Push)
+EJURouterPageTypeNativeWithPresent          = 1,  (原生Present)
+EJURouterPageTypeLocalHtml                  = 2,  (本地H5)
+EJURouterPageTypeWeb                        = 3,  (web)
+EJURouterPageTypeUnknown                    = -1, (未知)
 ```
 
 ## viewMap文件说明
