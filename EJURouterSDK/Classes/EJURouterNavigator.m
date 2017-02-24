@@ -250,10 +250,11 @@ jsFunctionArray:(NSArray *)jsFunctionArray
 
 #pragma mark - ConfigVC
 
-- (void)configVC:(UIViewController *)vc WithDataModel:(EJURouterDataModel *)model params:(NSDictionary *)params jsFunctionArray:(NSMutableArray *)jsFunctionArray
+- (void)configVC:(UIViewController *)vc WithDataModel:(EJURouterDataModel *)model params:(NSDictionary *)params jsFunctionArray:(NSArray *)jsFunctionArray
 {
     switch (model.type) {
-        case EJURouterPageTypeNative:
+        case EJURouterPageTypeNativeWithPush:
+        case EJURouterPageTypeNativeWithPresent:
         {
             [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
                 
@@ -338,18 +339,36 @@ jsFunctionArray:(NSArray *)jsFunctionArray
         
         EJURouterDataModel *model       = [self.map modelWithIdentifier:identifier];
         
-        if (model.type == EJURouterPageTypeNative) {
+        if (model.type == EJURouterPageTypeNativeWithPresent || model.type == EJURouterPageTypeNativeWithPush) {
+            NSLog(@"story==%@",[[NSBundle mainBundle] pathForResource:model.className ofType:@"storyboardc"]);
             //本地
             // 打开页面
             if ([[NSBundle mainBundle] pathForResource:model.className ofType:@"nib"]) {    //xib
-                [self openFromXibWithId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+                
+                if (model.type == EJURouterPageTypeNativeWithPresent) {      //present
+                    [self presentXibWithId:identifier from:[EJURouterNavigator sharedNavigator].navigationController.topViewController params:params jsFunctionArray:@[] onCompletion:nil];
+                }
+                else {      //push
+                    [self openFromXibWithId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+                }
             }
             else if ([[NSBundle mainBundle] pathForResource:model.className ofType:@"storyboardc"]) {      //storyboard
-                [self openFromStoryboardWithId:identifier sbName:@"" sbId:@"" params:params jsFunctionArray:@[] onCompletion:nil];
+                
+                if (model.type == EJURouterPageTypeNativeWithPresent) {      //present
+                    [self presentSBWithId:identifier sbName:@"" sbId:@"" from:[EJURouterNavigator sharedNavigator].navigationController.topViewController params:params jsFunctionArray:@[] onCompletion:nil];
+                }
+                else {      //push
+                    [self openFromStoryboardWithId:identifier sbName:@"" sbId:@"" params:params jsFunctionArray:@[] onCompletion:nil];
+                }
             }
             else {      //vc
                 
-                [self openId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+                if (model.type == EJURouterPageTypeNativeWithPresent) {      //present
+                    [self presentId:identifier from:[EJURouterNavigator sharedNavigator].navigationController.topViewController params:params jsFunctionArray:@[] onCompletion:nil];
+                }
+                else {      //push
+                    [self openId:identifier params:params jsFunctionArray:@[] onCompletion:nil];
+                }
             }
             return YES;
             // local html
@@ -370,7 +389,7 @@ jsFunctionArray:(NSArray *)jsFunctionArray
 }
 
 - (void)openWebVcWithUrl:(NSURL *)url andParams:(NSDictionary *)params andJSFunctionArray:(NSArray *)jsFunctionArray {
-    EJURouterWebViewController *webVc = self.navigationController.topViewController;
+    EJURouterWebViewController *webVc = (EJURouterWebViewController *)self.navigationController.topViewController;
     if ([webVc isKindOfClass:[EJURouterWebViewController class]]) {
         [webVc setUrl:url];
         [webVc setParams:params];

@@ -32,7 +32,8 @@
     [super setValuesForKeysWithDictionary:keyedValues];
     
     switch (_type) {
-        case EJURouterPageTypeNative:
+        case EJURouterPageTypeNativeWithPush:
+        case EJURouterPageTypeNativeWithPresent:
             _className = _resource;
             break;
         case EJURouterPageTypeLocalHtml:

@@ -31,14 +31,16 @@ typedef NS_ENUM(NSUInteger, EJURouterResponseStatusCode) {
 /**
  页面类型
 
- - EJURouterPageTypeNative:    原生页面
- - EJURouterPageTypeLocalHtml: 本地Html文件
- - EJURouterPageTypeWeb:       在线网页
+ - EJURouterPageTypeNativeWithPush:         原生页面(Push)
+ - EJURouterPageTypeNativeWithPresent:      原生页面(Present)
+ - EJURouterPageTypeLocalHtml:              本地Html文件
+ - EJURouterPageTypeWeb:                    在线网页
  */
 typedef NS_ENUM(NSInteger, EJURouterPageType) {
-    EJURouterPageTypeNative                     = 0,
-    EJURouterPageTypeLocalHtml                  = 1,
-    EJURouterPageTypeWeb                        = 2,
+    EJURouterPageTypeNativeWithPush             = 0,
+    EJURouterPageTypeNativeWithPresent          = 1,
+    EJURouterPageTypeLocalHtml                  = 2,
+    EJURouterPageTypeWeb                        = 3,
     EJURouterPageTypeUnknown                    = -1,
 };
 
