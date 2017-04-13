@@ -8,69 +8,74 @@
 
 #import "EJURouterWebViewController.h"
 #import "EJURouterNavigator.h"
-#import <Webkit/Webkit.h>
 #import "EJURouterWhiteList.h"
+#import <Webkit/Webkit.h>
+#import "UINavigationBar+Color.h"
 
-@interface EJURouterWebViewController ()<WKNavigationDelegate, WKScriptMessageHandler>
+@interface EJURouterWebViewController ()<WKNavigationDelegate, WKScriptMessageHandler, UIScrollViewDelegate>
 {
     WKWebView *_webView;
-    UIProgressView *_progressView;
     
     UIButton *_closeBtn;
     
     NSMutableArray *_history;
     BOOL _backToRoot;
-    NSURL *_initialUrl;
     BOOL _loadAboutBlank;
+    WKScriptMessage *_scriptMessage;
 }
+
+@property (nonatomic, copy) NSString *leftCallBack;
+@property (nonatomic, copy) NSString *rightCallBack;
+
 @end
 
 @implementation EJURouterWebViewController
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (_changeNaviBarColorWithSwipe == YES) {
+        _webView.scrollView.delegate = self;
+        //设置导航栏透明，并去掉底部横线
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    
+    [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar eju_reset];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.navigationItem.hidesBackButton = YES;
     _history = [[NSMutableArray alloc]init];
-    _initialUrl = _url;
-    [self addNavBtn];
-    [self configUI];
+    [self initWebView];
 }
 
-- (void)addNavBtn {
-    UIBarButtonItem *back = [[UIBarButtonItem alloc]initWithTitle:@"返回" style:UIBarButtonItemStyleDone target:self action:@selector(back)];
-    self.navigationItem.leftBarButtonItem = back;
-}
-
-- (void)configUI
+- (void)initWebView
 {
     WKWebViewConfiguration * configuration = [[WKWebViewConfiguration alloc] init];
     //注册供js调用的方法
     WKUserContentController *userContentController = [[WKUserContentController alloc] init];
     for (NSString *jsFunctionName in _jsFunctionNameArrays) {
-        [userContentController addScriptMessageHandler:self name:jsFunctionName];//注册name为easyLiveShare的js方法
+        [userContentController addScriptMessageHandler:self name:jsFunctionName];   //注册js方法
     }
     configuration.userContentController = userContentController;
     configuration.preferences.javaScriptEnabled = YES; //打开JavaScript交互 默认为YES
-
     
     if (self.navigationController.navigationBar.hidden == NO) {
-        _progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 0)];
         _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) configuration:configuration];
-     } else {
-        _progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 0)];
-         _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height-20) configuration:configuration];
+    } else {
+        _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height-20) configuration:configuration];
     }
-    _progressView.progress = 0;
-    _progressView.progressTintColor = [UIColor greenColor];
-    _progressView.trackTintColor = [UIColor clearColor];
-    
     [self.view addSubview:_webView];
-    [self.view addSubview:_progressView];
-    
     _webView.navigationDelegate = self;
     [self loadWithUrl:_url andParams:_params];
-    [_webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)loadWithUrl:(NSURL *)url andParams:(NSDictionary *)params {
@@ -88,7 +93,8 @@
                               };
         [_history addObject:dic];
         [self loadAboutBlank];
-    } else if ([url.absoluteString hasPrefix:@"http"]) {
+    }
+    else if ([url.absoluteString hasPrefix:@"http"] || [url.absoluteString hasPrefix:@"https"]) {
         
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -113,12 +119,6 @@
     [_webView loadRequest:request];
 }
 
-- (void)loadRequest
-{
-    NSURLRequest *request = [NSURLRequest requestWithURL:_url];
-    [_webView loadRequest:request];
-}
-
 - (void)loadHtmlStringWithDic:(NSDictionary *)dic
 {
     NSMutableString *htmlString = dic[@"htmlString"];
@@ -140,115 +140,178 @@
     [_webView loadHTMLString:htmlString baseURL:baseUrl];
 }
 
-- (void)showCloseBtn
-{
-    if (self.navigationItem.leftBarButtonItems.count==1) {
-        _progressView.progress = 0;
-        UIBarButtonItem *close = [[UIBarButtonItem alloc]initWithTitle:@"关闭" style:UIBarButtonItemStyleDone target:self action:@selector(close)];
-        self.navigationItem.leftBarButtonItems = @[self.navigationItem.leftBarButtonItems[0], close];
+- (void)leftButtonClick:(UIBarButtonItem *)barButtonItem {
+    
+    NSLog(@"leftButtonClick");
+    
+    //若left的callback为空，则执行“返回”功能；若不为空，则执行native调js。
+    if ([self.leftCallBack isEqualToString:@""]) {
+        
+        if ([_webView canGoBack]) {
+            [_webView goBack];
+        }
     }
+    else {
+        NSString *jsStr = [NSString stringWithFormat:@"%@()",self.leftCallBack];
+        WKWebView *webView = (WKWebView *)_scriptMessage.webView;
+        if (!webView.loading) {
+            //native调js
+            [webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+                //TODO
+                NSLog(@"response11===%@ , error11===%@",response,error);
+            }];
+        }
+    }
+    
+//    if ([_webView canGoBack]) {
+//        
+//        [self showCloseBtn];
+//        [_webView goBack];
+//    } else {
+//        
+//        if (_history.count>1) {
+//            [self showCloseBtn];
+//            [_history removeLastObject];
+//            [self loadHtmlStringWithDic:_history.lastObject];
+//        } else {
+//            [self.navigationController popViewControllerAnimated:YES];
+//        }
+//    }
 }
 
-- (void)back {
-    if ([_webView canGoBack]) {
+- (void)rightButtonClick:(UIBarButtonItem *)barButtonItem {
+    
+    NSLog(@"rightButtonClick");
+    
+    //若right的callback为空，则不执行任何功能；若不为空，则执行native调js。
+    if (![self.rightCallBack isEqualToString:@""]) {
         
-        [self showCloseBtn];
-        [_webView goBack];
-    } else {
-//        if (!_backToRoot && _url != _initialUrl) {
-//            [self showCloseBtn];
-//            [self firstLoadWithUrl:_initialUrl];
-//            _backToRoot = YES;
-//        } else {
-//        }
-        if (_history.count>1) {
-            [self showCloseBtn];
-            [_history removeLastObject];
-            [self loadHtmlStringWithDic:_history.lastObject];
-        } else {
-            [self.navigationController popViewControllerAnimated:YES];
+        NSString *jsStr = [NSString stringWithFormat:@"%@()",self.rightCallBack];
+        WKWebView *webView = (WKWebView *)_scriptMessage.webView;
+        if (!webView.loading) {
+            //native调js
+            [webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+                //TODO
+                NSLog(@"response22===%@ , error22===%@",response,error);
+            }];
         }
     }
 }
 
-- (void)close {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    [_progressView setProgress:[change[@"new"] floatValue] animated:YES];
-    if ([change[@"new"] floatValue] == 1.0) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            _progressView.progress = 0.0;
-        });
-    }
-}
-
-- (void)dealloc
-{
-    [_webView removeObserver:self forKeyPath:@"estimatedProgress"];
-}
-
-//- (void)setUrl:(NSURL *)url
-//{
-//    _url = url;
-//    if (_url) {
-//        [self loadRequest];
-//    }
-//}
-
 #pragma mark - WKScriptMessageHandler
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidReceiveScriptMessage" object:message userInfo:nil];
+    NSLog(@"name=%@, body=%@",message.name, message.body);
+    _scriptMessage = message;
+    
+    if ([message.name isEqualToString:@"changeNaviBar"]) {     //控制导航栏左右按钮状态和标题
+        
+        if (![message.body isKindOfClass:[NSNull class]]) {
+            self.title = [message.body objectForKey:@"title"];
+            if ([[message.body objectForKey:@"left"][@"callback"] isEqualToString:@""]) {
+                _leftCallBack = @"";
+            }
+            else {
+                _leftCallBack = [message.body objectForKey:@"left"][@"callback"];
+            }
+            
+            if ([[message.body objectForKey:@"left"][@"image"] isEqualToString:@""] || [message.body objectForKey:@"left"][@"image"] == nil) {  //导航栏左侧按钮
+                
+                if ([[message.body objectForKey:@"left"][@"name"] isEqualToString:@""]) {
+                    self.navigationItem.leftBarButtonItem = nil;
+                }
+                else {
+                    NSString *leftButtonTitle = [message.body objectForKey:@"left"][@"name"];
+                    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:leftButtonTitle style:UIBarButtonItemStyleDone target:self action:@selector(leftButtonClick:)];
+                    self.navigationItem.leftBarButtonItem = leftButton;
+                }
+            }
+            else {
+                NSString *leftButtonImage = [message.body objectForKey:@"left"][@"image"];
+                UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                [leftButton setFrame:CGRectMake(0, 0, 44, 44)];
+                [leftButton setImage:[UIImage imageNamed:leftButtonImage] forState:UIControlStateNormal];
+                [leftButton addTarget:self action:@selector(leftButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+                UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+                self.navigationItem.leftBarButtonItem = leftBarButton;
+            }
+            
+            
+            if ([[message.body objectForKey:@"right"][@"callback"] isEqualToString:@""]) {
+                _rightCallBack = @"";
+            }
+            else {
+                _rightCallBack = [message.body objectForKey:@"right"][@"callback"];
+            }
+            
+            if ([[message.body objectForKey:@"right"][@"image"] isEqualToString:@""] || [message.body objectForKey:@"right"][@"image"] == nil) {  //导航栏右侧按钮
+                
+                if ([[message.body objectForKey:@"right"][@"name"] isEqualToString:@""]) {
+                    self.navigationItem.rightBarButtonItem = nil;
+                }
+                else {
+                    NSString *rightButtonTitle = [message.body objectForKey:@"right"][@"name"];
+                    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:rightButtonTitle style:UIBarButtonItemStyleDone target:self action:@selector(rightButtonClick:)];
+                    self.navigationItem.rightBarButtonItem = rightButton;
+                }
+            }
+            else {
+                
+                NSString *rightButtonImage = [message.body objectForKey:@"right"][@"image"];
+                UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                [rightButton setFrame:CGRectMake(0, 0, 44, 44)];
+                [rightButton setImage:[UIImage imageNamed:rightButtonImage] forState:UIControlStateNormal];
+                [rightButton addTarget:self action:@selector(rightButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+                UIBarButtonItem *rightBarButton = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+                self.navigationItem.leftBarButtonItem = rightBarButton;
+            }
+        }
+    }
+    else {      //其他
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidReceiveScriptMessage" object:message userInfo:nil];
+    }
 }
 
-#pragma mark - NavigationDelegate
+#pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     NSLog(@"action");
+    
     NSString *urlstr = navigationAction.request.URL.absoluteString;
+    NSLog(@"urlstr=%@",urlstr);
+
     if (![EJURouterWhiteList isInWhiteList:urlstr]) {
         _loadAboutBlank = YES;
         decisionHandler(WKNavigationActionPolicyAllow);
         return;
     }
     
-//    if ([urlstr isEqualToString:@"about:blank"] || [urlstr isEqualToString:_url.absoluteString]) {
-//        decisionHandler(WKNavigationActionPolicyAllow);
-//        return;
-//    }
-    
-    
-//    _progressView.progress = 0;
     // 是否在新视图控制器中打开
-    if ([[EJURouterNavigator sharedNavigator]willOpenUrlInNewPage:navigationAction.request.URL]) {
+    if ([[EJURouterNavigator sharedNavigator] willOpenUrlInNewPage:navigationAction.request.URL]) {
         decisionHandler(WKNavigationActionPolicyCancel);
     } else {
         decisionHandler(WKNavigationActionPolicyAllow);
     }
 }
 
+// 页面开始加载时调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     NSLog(@"start");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidStart" object:webView userInfo:nil];
 }
 
+// 当内容开始返回时调用
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
     NSLog(@"commit");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidCommit" object:webView userInfo:nil];
 }
 
+// 页面加载完成之后调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     NSLog(@"finish");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidFinish" object:webView userInfo:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        _progressView.progress = 0.0;
-    });
     
     if ([webView.URL.absoluteString isEqualToString:@"about:blank"]
         && _loadAboutBlank){
@@ -257,10 +320,25 @@
     }
 }
 
+// 页面加载失败时调用
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WebViewDidFail" object:webView userInfo:@{@"error":error}];
-    NSLog(@"%@", error);
+    NSLog(@"error===%@", error);
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    UIColor *color = [UIColor blackColor];
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if (offsetY > 50) {
+        CGFloat alpha = MIN(1, 1 - ((50 + 64 - offsetY) / 64));
+        [self.navigationController.navigationBar eju_setBackgroundColor:[color colorWithAlphaComponent:alpha]];
+    }
+    else {
+        [self.navigationController.navigationBar eju_setBackgroundColor:[color colorWithAlphaComponent:0]];
+    }
 }
 
 @end

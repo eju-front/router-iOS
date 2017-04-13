@@ -37,7 +37,7 @@
 		<key>identifier</key>
 		<string>web</string>
 		<key>resource</key>
-		<string>http://10.0.60.95:8090/easyliveh5/</string>
+		<string>http://10.0.60.95:8055</string>
 		<key>type</key>
 		<string>3</string>
 		<key>description</key>
@@ -47,7 +47,7 @@
 		<key>identifier</key>
 		<string>web2</string>
 		<key>resource</key>
-		<string>http://10.0.60.95:8090/easyliveh5/demo.html</string>
+		<string>http://10.0.60.95:8055/easyliveh5/demo.html</string>
 		<key>type</key>
 		<string>3</string>
 		<key>description</key>

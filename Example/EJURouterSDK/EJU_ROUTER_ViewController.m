@@ -64,11 +64,10 @@
 //                                     @"children":@[@"大王", @"小王"],
 //                                     };
             
-            NSDictionary *params = @{
-                                     @"accessToken":@"209f1368150dc26f5f78de12531f78a5"
-                                     };
+            NSDictionary *params = @{@"accessToken":@"209f1368150dc26f5f78de12531f78a5", @"username":@""};
+            NSArray *jsFunctionArray = @[@"easyLiveShare",@"changeNaviBar"];
             // web
-            [[EJURouterNavigator sharedNavigator]openId:@"web" params:params jsFunctionArray:@[] onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
+            [[EJURouterNavigator sharedNavigator]openId:@"web" params:params jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
                 NSLog(@"+++%ld", resultCode);
             }];
             break;

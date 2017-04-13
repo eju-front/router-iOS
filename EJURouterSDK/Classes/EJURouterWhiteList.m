@@ -13,7 +13,7 @@
 @implementation EJURouterWhiteList
 + (BOOL)isInWhiteList:(NSString *)urlStr
 {
-    NSString *http = @"http://10.0.60.95:8090";
+    NSString *http = @"http://10.0.60.95";
     NSString *app = [NSString stringWithFormat:@"%@://", [EJURouterNavigator sharedNavigator].configuration.urlScheme];
     
     return [urlStr hasPrefix:http] || [urlStr hasPrefix:app];

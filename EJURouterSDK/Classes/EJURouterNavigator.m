@@ -323,7 +323,7 @@ jsFunctionArray:(NSArray *)jsFunctionArray
 - (BOOL)willOpenUrlInNewPage:(NSURL *)url
 {
     if (url) {
-        if ([url.scheme hasPrefix:@"http"]) {
+        if ([url.scheme hasPrefix:@"http"] || [url.scheme hasPrefix:@"https"]) {
             return NO;
         } else if (![url.scheme isEqualToString:self.configuration.urlScheme]) {
             
@@ -340,7 +340,7 @@ jsFunctionArray:(NSArray *)jsFunctionArray
         EJURouterDataModel *model       = [self.map modelWithIdentifier:identifier];
         
         if (model.type == EJURouterPageTypeNativeWithPresent || model.type == EJURouterPageTypeNativeWithPush) {
-            NSLog(@"story==%@",[[NSBundle mainBundle] pathForResource:model.className ofType:@"storyboardc"]);
+            
             //本地
             // 打开页面
             if ([[NSBundle mainBundle] pathForResource:model.className ofType:@"nib"]) {    //xib

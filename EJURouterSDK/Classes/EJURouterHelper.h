@@ -55,4 +55,24 @@
  */
 + (NSString *)fileHashWithData:(NSData *)fileData;
 
+
+/**
+ json字符串转字典格式
+ 
+ @param jsonString json字符串
+ 
+ @return 字典格式
+ */
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
+
+
+/**
+ 十六进制色值转RGB
+ 
+ @param color 十六进制色值
+ 
+ @return UIColor
+ */
++ (UIColor *)colorWithHexString:(NSString *)color;
+
 @end

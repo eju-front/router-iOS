@@ -71,7 +71,7 @@
     XCTAssertEqualObjects([EJURouterHelper serilizeUrlQuery:@"name=John&sss"][@"name"], @"John");
     XCTAssertEqual([EJURouterHelper serilizeUrlQuery:nil].allKeys.count, 0);
     
-    NSArray *jsFunctionArray = @[@"easyLiveShare"];
+    NSArray *jsFunctionArray = @[@"easyLiveShare",@"changeNaviBar"];
     
     [[EJURouterNavigator sharedNavigator]openId:@"native" jsFunctionArray:jsFunctionArray onCompletion:^(UIViewController *vc, EJURouterResponseStatusCode resultCode) {
         XCTAssertEqual(resultCode, EJURouterResponseStatusCodeSuccess);
